@@ -284,35 +284,50 @@ def plot_PCA_errors():
 # In[37]:
 
 # PCA weigths initialized auto-encoder
-with open('planarity_errors_1489714415.76.json') as infile:
-    c = json.load(infile)
-    np_errors = np.asarray(c['non_planar_curves_error'])
-    p_errors = np.asarray(c['planar_curves_error'])
-    
-NPE = np.insert(np_errors, 1, 1, axis=2)
-PE = np.insert(p_errors, 1, 0, axis=2)
-X = np.concatenate((NPE, PE), axis=0)
-X = X.reshape(200,2)
+
 
 
 # In[20]:
 
 #Non-Planar Errors
-#hist, bins = np.histogram(X[0:100,0], bins=50)
-#width = 0.7 * (bins[1] - bins[0])
-#center = (bins[:-1] + bins[1:]) / 2
-#plt.bar(center, hist, align='center', width=width)
-#plt.show()
+
+def ae_with_pca_wt_np_errors():
+    with open('planarity_errors_1490807988.67.json') as infile:
+        c = json.load(infile)
+    np_errors = np.asarray(c['non_planar_curves_error'])
+    p_errors = np.asarray(c['planar_curves_error'])
+    
+    NPE = np.insert(np_errors, 1, 1, axis=2)
+    PE = np.insert(p_errors, 1, 0, axis=2)
+    X = np.concatenate((NPE, PE), axis=0)
+    X = X.reshape(200,2)
+    hist, bins = np.histogram(X[0:100,0], bins=50)
+    width = 0.7 * (bins[1] - bins[0])
+    center = (bins[:-1] + bins[1:]) / 2
+    plt.bar(center, hist, align='center', width=width)
+    plt.show()
 
 
 # In[21]:
 
 #Planar Errors
-#hist, bins = np.histogram(X[100:200,0], bins=50)
-#width = 0.7 * (bins[1] - bins[0])
-#center = (bins[:-1] + bins[1:]) / 2
-#plt.bar(center, hist, align='center', width=width)
-#plt.show()
+
+def ae_with_pca_wt_p_errors():
+    with open('planarity_errors_1490807988.67.json') as infile:
+        c = json.load(infile)
+    np_errors = np.asarray(c['non_planar_curves_error'])
+    p_errors = np.asarray(c['planar_curves_error'])
+    
+    NPE = np.insert(np_errors, 1, 1, axis=2)
+    PE = np.insert(p_errors, 1, 0, axis=2)
+    X = np.concatenate((NPE, PE), axis=0)
+    X = X.reshape(200,2)
+    
+    hist, bins = np.histogram(X[100:200,0], bins=50)
+    width = 0.7 * (bins[1] - bins[0])
+    center = (bins[:-1] + bins[1:]) / 2
+    plt.bar(center, hist, align='center', width=width)
+    plt.show()
 
 
 # In[42]:
@@ -477,36 +492,84 @@ class AutoEncoder(object):
 
 # In[19]:
 
-with open('planarity_errors_1488342084.28.json') as infile:
-    c = json.load(infile)
-    np_errors = np.asarray(c['non_planar_curves_error'])
-    p_errors = np.asarray(c['planar_curves_error'])
+def rdm_wt_ae_errors():
+    import numpy as np
+    import matplotlib.pyplot as plt
+    with open('planarity_errors_1489714415.76.json') as infile:
+        c = json.load(infile)
+        np_errors = np.asarray(c['non_planar_curves_error'])
+        p_errors = np.asarray(c['planar_curves_error'])
     
+    # clean data
+    NPE = np.insert(np_errors, 1, 1, axis=2)
+    PE = np.insert(p_errors, 1, 0, axis=2)
+    X = np.concatenate((NPE, PE), axis=0)
+    X = X.reshape(200,2)
+    nan_idx = [i for i, x in enumerate(X) if (math.isnan(x[0]) == True)]
+    print(nan_idx)
+    X_cleaned = np.delete(X, nan_idx, axis=0)
+    X_cleaned.shape
 
 
-# In[33]:
+    bins = np.linspace(0, 100, 100)
+    plt.hist(X_cleaned[0:100,0], bins, alpha=0.25, label='NPE')
+    plt.hist(X_cleaned[100:198,0], bins, alpha=0.25, label='PE')
+    plt.legend(loc='upper right')
+    plt.show()
 
-# clean data
-NPE = np.insert(np_errors, 1, 1, axis=2)
-PE = np.insert(p_errors, 1, 0, axis=2)
-X = np.concatenate((NPE, PE), axis=0)
-X = X.reshape(200,2)
-nan_idx = [i for i, x in enumerate(X) if (math.isnan(x[0]) == True)]
-#print(nan_idx)
-X_cleaned = np.delete(X, nan_idx, axis=0)
-#X_cleaned.shape
 
 
 # In[32]:
 
-# planar curves
-#hist, bins = np.histogram(X_cleaned[0:197,0], bins=50)
-#width = 0.7 * (bins[1] - bins[0])
-#center = (bins[:-1] + bins[1:]) / 2
-#plt.bar(center, hist, align='center', width=width)
-#plt.show()
+def rdm_p_errors():
+    # planar curves
+    import numpy as np
+    import matplotlib.pyplot as plt
+    with open('planarity_errors_1488999893.39.json') as infile:
+        c = json.load(infile)
+        np_errors = np.asarray(c['non_planar_curves_error'])
+        p_errors = np.asarray(c['planar_curves_error'])
+    
+    # clean data
+    NPE = np.insert(np_errors, 1, 1, axis=2)
+    PE = np.insert(p_errors, 1, 0, axis=2)
+    X = np.concatenate((NPE, PE), axis=0)
+    X = X.reshape(200,2)
+    nan_idx = [i for i, x in enumerate(X) if (math.isnan(x[0]) == True)]
+    print(nan_idx)
+    X_cleaned = np.delete(X, nan_idx, axis=0)
+    X_cleaned.shape
+    
+    hist, bins = np.histogram(X_cleaned[100:197,0], bins=50)
+    width = 0.7 * (bins[1] - bins[0])
+    center = (bins[:-1] + bins[1:]) / 2
+    plt.bar(center, hist, align='center', width=width)
+    plt.show()
 
-
+def rdm_np_errors():
+    # planar curves
+    import numpy as np
+    import matplotlib.pyplot as plt
+    with open('planarity_errors_1488999893.39.json') as infile:
+        c = json.load(infile)
+        np_errors = np.asarray(c['non_planar_curves_error'])
+        p_errors = np.asarray(c['planar_curves_error'])
+    
+    # clean data
+    NPE = np.insert(np_errors, 1, 1, axis=2)
+    PE = np.insert(p_errors, 1, 0, axis=2)
+    X = np.concatenate((NPE, PE), axis=0)
+    X = X.reshape(200,2)
+    nan_idx = [i for i, x in enumerate(X) if (math.isnan(x[0]) == True)]
+    print(nan_idx)
+    X_cleaned = np.delete(X, nan_idx, axis=0)
+    X_cleaned.shape
+    
+    hist, bins = np.histogram(X_cleaned[0:100,0], bins=70)
+    width = 0.7 * (bins[1] - bins[0])
+    center = (bins[:-1] + bins[1:]) / 2
+    plt.bar(center, hist, align='center', width=width)
+    plt.show()
 # In[36]:
 
 # non-planar curves
